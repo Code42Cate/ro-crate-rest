@@ -25,7 +25,7 @@ public class ContextController {
     }
   }
 
-  @DeleteMapping("/crates/{crateId}/context/pair/{key}")
+  @DeleteMapping("/crates/{crateId}/context/pairs/{key}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void deletePair(@PathVariable String crateId, @PathVariable String key, @RequestAttribute RoCrate crate) {
 
@@ -33,9 +33,10 @@ public class ContextController {
 
   }
 
-  @PutMapping("/crates/{crateId}/context/pair/{key}")
+  @PutMapping("/crates/{crateId}/context/pairs/{key}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addPair(@PathVariable String crateId, @PathVariable String key, @RequestBody PairValuePayload pairValuePayload,
+  public void addPair(@PathVariable String crateId, @PathVariable String key,
+      @RequestBody PairValuePayload pairValuePayload,
       @RequestAttribute RoCrate crate) {
 
     crate = new RoCrate.RoCrateBuilder(crate).addValuePairToContext(key, pairValuePayload.value).build();
@@ -50,16 +51,19 @@ public class ContextController {
 
   }
 
-  @DeleteMapping("/crates/{crateId}/context/urls/{url}")
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void deleteUrl(@PathVariable String crateId, @PathVariable String url, @RequestAttribute RoCrate crate) {
-
-    // TODO: Add to ro-crate-java
-    // crate = new
-    // RoCrate.RoCrateBuilder(crate).deleteUrlFromContext(URLDecoder.decode(url,
-    // StandardCharsets.UTF_8))
-    // .build();
-
-  }
-
+  /*
+   * @DeleteMapping("/crates/{crateId}/context/urls/{url}")
+   * 
+   * @ResponseStatus(code = HttpStatus.NO_CONTENT)
+   * public void deleteUrl(@PathVariable String crateId, @PathVariable String
+   * url, @RequestAttribute RoCrate crate) {
+   * 
+   * // TODO: Add to ro-crate-java
+   * // crate = new
+   * // RoCrate.RoCrateBuilder(crate).deleteUrlFromContext(URLDecoder.decode(url,
+   * // StandardCharsets.UTF_8))
+   * // .build();
+   * 
+   * }
+   */
 }
