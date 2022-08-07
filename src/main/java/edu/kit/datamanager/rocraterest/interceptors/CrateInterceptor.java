@@ -5,6 +5,11 @@ import java.util.Map;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.kit.datamanager.ro_crate.RoCrate;
 import edu.kit.datamanager.ro_crate.reader.RoCrateReader;
 import edu.kit.datamanager.ro_crate.reader.ZipReader;
@@ -38,6 +43,7 @@ public class CrateInterceptor implements HandlerInterceptor {
         RoCrate crate = roCrateFolderReader.readCrate(storageService.path(crateId));
 
         request.setAttribute("crate", crate);
+        request.setAttribute("_crate", crate);
 
         return true;
     }
@@ -45,18 +51,23 @@ public class CrateInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(final HttpServletRequest request, final HttpServletResponse response,
             final Object handler,
-            final Exception ex) {
+            final Exception ex) throws JsonMappingException, JsonProcessingException {
 
         String crateId = this.parseCrateId(request);
         if (crateId == null) {
             return;
         }
 
-        RoCrate crate = (RoCrate) request.getAttribute("crate");
+        RoCrate originalCrate = (RoCrate) request.getAttribute("_crate");
+        RoCrate updatedCrate = (RoCrate) request.getAttribute("crate");
 
-        // TODO: Only save when crate has been changed
-        RoCrateWriter roCrateZipWriter = new RoCrateWriter(new ZipWriter());
-        roCrateZipWriter.save(crate, this.storageService.path(crateId));
+        JsonNode originalJson = new ObjectMapper().readTree((originalCrate).getJsonMetadata());
+        JsonNode updatedJson = new ObjectMapper().readTree(updatedCrate.getJsonMetadata());
+
+        if (!originalJson.equals(updatedJson)) {
+            RoCrateWriter roCrateZipWriter = new RoCrateWriter(new ZipWriter());
+            roCrateZipWriter.save(updatedCrate, this.storageService.path(crateId));
+        }
 
     }
 
