@@ -1,0 +1,53 @@
+plugins {
+	id 'org.springframework.boot' version '3.0.0-M4'
+	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+	id 'java'
+	id 'jacoco'
+}
+
+group = 'edu.kit.datamanager'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+
+dependencies {
+	implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.11.1'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'edu.kit.datamanager:ro-crate-java:1.0.4'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-web'
+}
+
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        csv.required = true
+        xml.required = true // coveralls plugin depends on xml format report
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+
+configurations {
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+    }
+}
+
