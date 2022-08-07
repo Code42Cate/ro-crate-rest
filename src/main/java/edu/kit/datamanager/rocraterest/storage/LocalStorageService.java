@@ -67,4 +67,10 @@ public class LocalStorageService implements StorageService {
   public String path(String id) {
     return Paths.get(UPLOAD_DIR, id).toString();
   }
+
+
+  @Override
+  public Boolean exists(String id) {
+    return Files.exists(Paths.get(UPLOAD_DIR, id));
+  }
 }

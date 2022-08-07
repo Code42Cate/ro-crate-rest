@@ -15,5 +15,7 @@ public interface StorageService {
 
   String path(String id);
 
+  Boolean exists(String id);
+
 }
 

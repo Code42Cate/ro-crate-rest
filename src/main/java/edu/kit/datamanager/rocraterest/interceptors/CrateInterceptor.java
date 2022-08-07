@@ -2,6 +2,8 @@ package edu.kit.datamanager.rocraterest.interceptors;
 
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
 
@@ -38,12 +40,15 @@ public class CrateInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        System.out.println(crateId);
+        if (!this.storageService.exists(crateId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
+        }
+
         RoCrateReader roCrateFolderReader = new RoCrateReader(new ZipReader());
         RoCrate crate = roCrateFolderReader.readCrate(storageService.path(crateId));
 
         request.setAttribute("crate", crate);
-        request.setAttribute("_crate", crate);
+        request.setAttribute("_crate_json", crate.getJsonMetadata());
 
         return true;
     }
@@ -58,10 +63,10 @@ public class CrateInterceptor implements HandlerInterceptor {
             return;
         }
 
-        RoCrate originalCrate = (RoCrate) request.getAttribute("_crate");
+        String originalCrateJson = (String) request.getAttribute("_crate_json");
         RoCrate updatedCrate = (RoCrate) request.getAttribute("crate");
 
-        JsonNode originalJson = new ObjectMapper().readTree((originalCrate).getJsonMetadata());
+        JsonNode originalJson = new ObjectMapper().readTree(originalCrateJson);
         JsonNode updatedJson = new ObjectMapper().readTree(updatedCrate.getJsonMetadata());
 
         if (!originalJson.equals(updatedJson)) {

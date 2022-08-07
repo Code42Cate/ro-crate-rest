@@ -34,16 +34,13 @@ public class PersonEntityController {
   static class PersonEntityPropertyPayload {
     public JsonNode value;
 
-    public PersonEntityPropertyPayload() {
-    }
-
     @JsonCreator
     public PersonEntityPropertyPayload(JsonNode value) {
       this.value = value.get("value");
     }
   }
 
-  @PutMapping("/crates/{crateId}/entities/contextual/person/{personId}")
+  @PutMapping("/crates/{crateId}/entities/contextual/persons/{personId}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPersonEntity(@PathVariable String crateId, @PathVariable String personId,
       @RequestBody PersonEntityPayload personEntityPayload, @RequestAttribute RoCrate crate) {
@@ -56,14 +53,14 @@ public class PersonEntityController {
     crate = new RoCrate.RoCrateBuilder(crate).addContextualEntity(personEntity).build();
   }
 
-  @DeleteMapping("/crates/{crateId}/entities/contextual/person/{personId}")
+  @DeleteMapping("/crates/{crateId}/entities/contextual/persons/{personId}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void deletePersonEntity(@PathVariable String crateId, @PathVariable String personId,
       @RequestAttribute RoCrate crate) {
     crate.deleteEntityById(URLDecoder.decode(personId, StandardCharsets.UTF_8));
   }
 
-  @GetMapping("/crates/{crateId}/entities/contextual/person/{personId}")
+  @GetMapping("/crates/{crateId}/entities/contextual/persons/{personId}")
   @ResponseStatus(code = HttpStatus.OK)
   public ObjectNode getPersonEntity(@PathVariable String crateId, @PathVariable String personId,
       @RequestAttribute RoCrate crate, HttpServletResponse res) {
@@ -75,17 +72,19 @@ public class PersonEntityController {
     return entity.getProperties();
   }
 
-  @PutMapping("/crates/{crateId}/entities/contextual/person/{personId}/{property}")
+  @PutMapping("/crates/{crateId}/entities/contextual/persons/{personId}/{property}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPropertyToPersonEntity(@PathVariable String crateId, @PathVariable String personId,
       @PathVariable String property, @RequestBody PersonEntityPropertyPayload personEntityPropertyPayload,
       @RequestAttribute RoCrate crate) {
 
-    ContextualEntity entity = crate.getContextualEntityById(personId);
+    ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(personId, StandardCharsets.UTF_8));
 
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
     }
+    System.out.println(personEntityPropertyPayload.value);
+    System.out.println(property);
 
     entity.addProperty(property, personEntityPropertyPayload.value);
 
