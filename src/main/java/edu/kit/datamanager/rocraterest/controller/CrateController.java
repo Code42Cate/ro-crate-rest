@@ -46,7 +46,7 @@ public class CrateController {
     return new RoCrateService(crateId);
   }
 
-  @PutMapping("/crates/{crateId}")
+  @PostMapping("/crates/{crateId}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void update(@PathVariable String crateId, @RequestParam("file") MultipartFile file) throws IOException {
     // Add file to directory

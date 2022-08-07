@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -21,7 +22,6 @@ import edu.kit.datamanager.rocraterest.storage.StorageService;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -82,7 +82,7 @@ public class CrateControllerTest {
   @Test
   public void testCrateDelete() throws Exception {
     this.mockMvc.perform(delete("/crates/" + this.crateIds.get(0)))
-        .andExpect(status().isOk());
+        .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
     assertFalse(this.storageService.get(this.crateIds.get(0)).exists());
 
@@ -92,13 +92,15 @@ public class CrateControllerTest {
   public void testCrateUpdate() throws Exception {
     InputStream is = getClass().getClassLoader().getResourceAsStream("basic-crate.zip");
 
-    MockMultipartFile mockMultipartFile = new MockMultipartFile("file",
-        "basic-crate.zip",
+    MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "basic-crate.zip",
         "application/zip", is.readAllBytes());
 
-    this.mockMvc.perform(multipart("/crates/" + this.crateIds.get(0), null,
-        null).file(mockMultipartFile))
-        .andExpect(status().isOk());
+    MvcResult res = this.mockMvc
+        .perform(multipart("/crates/" + this.crateIds.get(0), null, null).file(mockMultipartFile))
+        .andExpect(status().is(HttpStatus.NO_CONTENT.value()))
+
+        .andReturn();
+
   }
 
   @AfterEach
