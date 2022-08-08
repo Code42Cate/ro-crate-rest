@@ -49,6 +49,11 @@ public class PersonEntityController {
   public void addPersonEntity(@PathVariable String crateId, @PathVariable String personId,
       @RequestBody PersonEntityPayload payload, @RequestAttribute RoCrate crate) {
 
+    // TODO: Decide if we want to delete and add or modify.
+    if (crate.getEntityById(personId) != null) {
+      crate.deleteEntityById(personId);
+    }
+
     PersonEntity personEntity = new PersonEntity.PersonEntityBuilder()
         .setId(URLDecoder.decode(personId, StandardCharsets.UTF_8))
         .addProperty("name", payload.name)

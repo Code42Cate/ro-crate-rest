@@ -85,6 +85,43 @@ public class PersonEntityControllerTest {
   }
 
   @Test
+  public void testAddExistingEntity() throws Exception {
+
+    String crateId = crateIds.get(0);
+    String personId = "#Alice";
+    String keyEncoded = URLEncoder.encode(personId, StandardCharsets.UTF_8);
+    JsonNode payload = this.mapper.createObjectNode().put("name", "Alice").put("hobby", "being nice");
+
+    this.mockMvc
+        .perform(put("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded)
+            .content(
+                mapper.writeValueAsString(new PersonEntityController.PersonEntityPropertyPayload(
+                    payload)))
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
+
+    RoCrate crate = Helper.getCrate(crateId);
+
+    assertNotNull(crate.getContextualEntityById(personId));
+
+    JsonNode payloadOverwrite = this.mapper.createObjectNode().put("name", "Alice");
+
+    this.mockMvc
+        .perform(put("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded)
+            .content(
+                mapper.writeValueAsString(new PersonEntityController.PersonEntityPropertyPayload(
+                  payloadOverwrite)))
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
+
+    crate = Helper.getCrate(crateId);
+
+    assertNotNull(crate.getContextualEntityById(personId));
+    assertNull(crate.getContextualEntityById(personId).getProperty("hobby"));
+
+  }
+
+  @Test
   public void testAddEntityWithInvalidCrateId() throws Exception {
 
     String crateId = "invalid";
