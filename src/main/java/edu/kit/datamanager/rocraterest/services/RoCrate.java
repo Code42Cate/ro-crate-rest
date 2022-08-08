@@ -1,10 +1,10 @@
 package edu.kit.datamanager.rocraterest.services;
 
-public class RoCrateService {
+public class RoCrate {
 
   private final String id;
 
-  public RoCrateService(String id) {
+  public RoCrate(String id) {
     this.id = id;
   }
 

@@ -94,9 +94,6 @@ public class PersonEntityController {
 
     entity.addProperty(property, personEntityPropertyPayload.value);
 
-    crate.deleteEntityById(personId);
-
-    crate = new RoCrate.RoCrateBuilder(crate).addContextualEntity(entity).build();
   }
 
 }

@@ -1,6 +1,6 @@
 package edu.kit.datamanager.rocraterest.controller;
 
-import edu.kit.datamanager.rocraterest.services.RoCrateService;
+import edu.kit.datamanager.rocraterest.services.RoCrate;
 import edu.kit.datamanager.rocraterest.storage.LocalStorageService;
 
 import java.io.File;
@@ -37,13 +37,13 @@ public class CrateController {
   }
 
   @PostMapping("/crates")
-  public RoCrateService create(@RequestParam("file") MultipartFile file) throws IOException {
+  public RoCrate create(@RequestParam("file") MultipartFile file) throws IOException {
 
     String crateId = UUID.randomUUID().toString();
 
     this.storageService.store(file.getInputStream(), crateId);
 
-    return new RoCrateService(crateId);
+    return new RoCrate(crateId);
   }
 
   @PostMapping("/crates/{crateId}")
