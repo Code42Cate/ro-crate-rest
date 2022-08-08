@@ -78,7 +78,7 @@ public class ContextControllerTest {
 
     this.mockMvc
         .perform(put("/crates/" + crateId + "/context/pairs/" + keyEncoded)
-            .content(mapper.writeValueAsString(new ContextController.PairValuePayload("value")))
+            .content(mapper.createObjectNode().put("value", "value").toString())
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 

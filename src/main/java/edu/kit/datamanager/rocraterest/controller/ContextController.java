@@ -6,8 +6,6 @@ import java.nio.charset.StandardCharsets;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 import edu.kit.datamanager.ro_crate.RoCrate;
 
 @RestController
@@ -15,14 +13,6 @@ public class ContextController {
 
   static class PairValuePayload {
     public String value;
-
-    public PairValuePayload() {
-    }
-
-    @JsonCreator
-    public PairValuePayload(String value) {
-      this.value = value;
-    }
   }
 
   @DeleteMapping("/crates/{crateId}/context/pairs/{key}")

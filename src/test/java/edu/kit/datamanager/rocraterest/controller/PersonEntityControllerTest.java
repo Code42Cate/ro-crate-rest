@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
@@ -67,12 +68,13 @@ public class PersonEntityControllerTest {
     String crateId = crateIds.get(0);
     String personId = "#Alice";
     String keyEncoded = URLEncoder.encode(personId, StandardCharsets.UTF_8);
+    JsonNode payload = this.mapper.createObjectNode().put("name", "Alice");
 
     this.mockMvc
         .perform(put("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded)
             .content(
                 mapper.writeValueAsString(new PersonEntityController.PersonEntityPropertyPayload(
-                    this.mapper.readTree("{\"name\":\"Alice\"}"))))
+                    payload)))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
@@ -88,12 +90,13 @@ public class PersonEntityControllerTest {
     String crateId = "invalid";
     String personId = "#Alice";
     String keyEncoded = URLEncoder.encode(personId, StandardCharsets.UTF_8);
+    JsonNode payload = this.mapper.createObjectNode().put("name", "Alice");
 
     this.mockMvc
         .perform(put("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded)
             .content(
                 mapper.writeValueAsString(new PersonEntityController.PersonEntityPropertyPayload(
-                    this.mapper.readTree("{\"name\":\"Alice\"}"))))
+                    payload)))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
 
@@ -151,11 +154,12 @@ public class PersonEntityControllerTest {
     String crateId = crateIds.get(0);
     String personId = "#Eve";
     String keyEncoded = URLEncoder.encode(personId, StandardCharsets.UTF_8);
+    JsonNode payload = this.mapper.createObjectNode().put("value", "Alice");
 
     this.mockMvc
         .perform(put("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded + "/name")
             .content(mapper.writeValueAsString(new PersonEntityController.PersonEntityPropertyPayload(
-                this.mapper.readTree("{\"value\":\"Alice\"}"))))
+                payload)))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
@@ -172,11 +176,12 @@ public class PersonEntityControllerTest {
     String crateId = crateIds.get(0);
     String personId = "#Eveeeee";
     String keyEncoded = URLEncoder.encode(personId, StandardCharsets.UTF_8);
+    JsonNode payload = this.mapper.createObjectNode().put("value", "Alice");
 
     this.mockMvc
         .perform(put("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded + "/name")
             .content(mapper.writeValueAsString(new PersonEntityController.PersonEntityPropertyPayload(
-                this.mapper.readTree("{\"value\":\"Alice\"}"))))
+                payload)))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
 
