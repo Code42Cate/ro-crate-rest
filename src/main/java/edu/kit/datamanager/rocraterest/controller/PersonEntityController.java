@@ -35,6 +35,7 @@ public class PersonEntityController {
 
   }
 
+  // TODO: This feels stupid
   static class PersonEntityPropertyPayload {
     public JsonNode value;
 
@@ -82,6 +83,7 @@ public class PersonEntityController {
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
     }
+
     return entity.getProperties();
   }
 
