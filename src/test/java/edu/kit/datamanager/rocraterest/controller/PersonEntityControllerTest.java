@@ -202,8 +202,26 @@ public class PersonEntityControllerTest {
 
     RoCrate crate = Helper.getCrate(crateId);
 
-    assertEquals(crate.getContextualEntityById(personId).getProperty("name").asText(), "Alice");
     assertNotNull(crate.getContextualEntityById(personId));
+    assertEquals(crate.getContextualEntityById(personId).getProperty("name").asText(), "Alice");
+
+  }
+
+  @Test
+  public void testDeleteEntityProperty() throws Exception {
+    String crateId = crateIds.get(0);
+    String personId = "#Eve";
+    String keyEncoded = URLEncoder.encode(personId, StandardCharsets.UTF_8);
+
+    this.mockMvc
+        .perform(delete("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded + "/name")
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
+
+    RoCrate crate = Helper.getCrate(crateId);
+
+    assertNotNull(crate.getContextualEntityById(personId));
+    assertNull(crate.getContextualEntityById(personId).getProperty("name"));
 
   }
 

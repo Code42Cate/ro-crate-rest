@@ -103,4 +103,21 @@ public class PersonEntityController {
 
   }
 
+  @DeleteMapping("/crates/{crateId}/entities/contextual/persons/{personId}/{property}")
+  @ResponseStatus(code = HttpStatus.NO_CONTENT)
+  public void deletePropertyFromPersonEntity(@PathVariable String crateId, @PathVariable String personId,
+      @PathVariable String property,
+      @RequestAttribute RoCrate crate) {
+
+    ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(personId, StandardCharsets.UTF_8));
+
+    if (entity == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
+    }
+
+    entity.setProperties(entity.getProperties().remove(property));
+
+    System.err.println(entity.getProperties().toString());
+  }
+
 }

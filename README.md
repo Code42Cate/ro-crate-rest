@@ -19,7 +19,8 @@
 - [ ] Moving files into directory
 
 ### PersonEntity Controller
-- [ ] Test to delete property
+- [x] Overwrite existing entity
+- [x] Test to delete property
 - [ ] Validation
 - [ ] Change multiple properties at once
 - [ ] Better error handling?
