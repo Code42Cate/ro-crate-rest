@@ -70,7 +70,9 @@ public class PersonEntityControllerTest {
 
     this.mockMvc
         .perform(put("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded)
-            .content(mapper.writeValueAsString(new PersonEntityController.PersonEntityPayload("Alice")))
+            .content(
+                mapper.writeValueAsString(new PersonEntityController.PersonEntityPropertyPayload(
+                    this.mapper.readTree("{\"name\":\"Alice\"}"))))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
@@ -89,7 +91,9 @@ public class PersonEntityControllerTest {
 
     this.mockMvc
         .perform(put("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded)
-            .content(mapper.writeValueAsString(new PersonEntityController.PersonEntityPayload("Alice")))
+            .content(
+                mapper.writeValueAsString(new PersonEntityController.PersonEntityPropertyPayload(
+                    this.mapper.readTree("{\"name\":\"Alice\"}"))))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
 
@@ -104,7 +108,6 @@ public class PersonEntityControllerTest {
 
     this.mockMvc
         .perform(delete("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded)
-            .content(mapper.writeValueAsString(new PersonEntityController.PersonEntityPayload("Alice")))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 

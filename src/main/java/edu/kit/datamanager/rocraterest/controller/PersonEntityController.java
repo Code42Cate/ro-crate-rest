@@ -2,12 +2,17 @@ package edu.kit.datamanager.rocraterest.controller;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -17,38 +22,42 @@ import edu.kit.datamanager.ro_crate.entities.contextual.PersonEntity;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
+@Validated
 public class PersonEntityController {
 
   static class PersonEntityPayload {
     public String name;
+    public Map<String, JsonNode> properties = new HashMap<String, JsonNode>();
 
-    public PersonEntityPayload() {
+    @JsonAnySetter
+    public void add(String key, JsonNode value) {
+      properties.put(key, value);
     }
 
-    @JsonCreator
-    public PersonEntityPayload(String name) {
-      this.name = name;
-    }
   }
 
   static class PersonEntityPropertyPayload {
     public JsonNode value;
 
     @JsonCreator
-    public PersonEntityPropertyPayload(JsonNode value) {
-      this.value = value.get("value");
+    public PersonEntityPropertyPayload(JsonNode json) {
+      this.value = json.get("value");
     }
   }
 
   @PutMapping("/crates/{crateId}/entities/contextual/persons/{personId}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPersonEntity(@PathVariable String crateId, @PathVariable String personId,
-      @RequestBody PersonEntityPayload personEntityPayload, @RequestAttribute RoCrate crate) {
+      @RequestBody PersonEntityPayload payload, @RequestAttribute RoCrate crate) {
 
     PersonEntity personEntity = new PersonEntity.PersonEntityBuilder()
         .setId(URLDecoder.decode(personId, StandardCharsets.UTF_8))
-        .addProperty("name", personEntityPayload.name)
+        .addProperty("name", payload.name)
         .build();
+
+    for (Map.Entry<String, JsonNode> entry : payload.properties.entrySet()) {
+      personEntity.addProperty(entry.getKey(), entry.getValue());
+    }
 
     crate = new RoCrate.RoCrateBuilder(crate).addContextualEntity(personEntity).build();
   }
@@ -83,8 +92,6 @@ public class PersonEntityController {
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
     }
-    System.out.println(personEntityPropertyPayload.value);
-    System.out.println(property);
 
     entity.addProperty(property, personEntityPropertyPayload.value);
 
