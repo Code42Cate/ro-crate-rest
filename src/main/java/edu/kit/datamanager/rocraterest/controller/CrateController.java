@@ -1,13 +1,14 @@
 package edu.kit.datamanager.rocraterest.controller;
 
 import edu.kit.datamanager.rocraterest.services.RoCrate;
-import edu.kit.datamanager.rocraterest.storage.LocalStorageService;
+import edu.kit.datamanager.rocraterest.storage.LocalStorageZipStrategy;
+import edu.kit.datamanager.rocraterest.storage.StorageClient;
+import jakarta.servlet.http.HttpServletRequest;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.UUID;
+import java.io.InputStream;
+import java.util.Optional;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -15,41 +16,63 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
+@RequestMapping("/crates")
 public class CrateController {
 
-  private final LocalStorageService storageService = new LocalStorageService();
+    private final StorageClient storageClient = new StorageClient(new LocalStorageZipStrategy());
 
-  @RequestMapping(value = "/crates/{crateId}", produces = "application/zip")
-  public ResponseEntity<Resource> get(@PathVariable String crateId) throws FileNotFoundException {
-    File zip = storageService.get(crateId);
+    @RequestMapping(value = "/{crateId}", produces = "application/zip")
+    public ResponseEntity<Resource> get(@PathVariable String crateId) throws FileNotFoundException {
 
-    Resource resource = new InputStreamResource(new FileInputStream(zip));
+        InputStream zipStream = this.storageClient.get().getCrateInputStream(crateId);
 
-    return new ResponseEntity<>(resource, HttpStatus.OK);
-  }
+        if (zipStream == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find crate");
+        }
 
-  @DeleteMapping("/crates/{crateId}")
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void delete(@PathVariable String crateId) {
-    storageService.delete(crateId);
-  }
+        return new ResponseEntity<>(new InputStreamResource(zipStream), HttpStatus.OK);
+    }
 
-  @PostMapping("/crates")
-  public RoCrate create(@RequestParam("file") MultipartFile file) throws IOException {
+    @DeleteMapping("/{crateId}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String crateId) {
+        this.storageClient.get().deleteCrate(crateId);
+    }
 
-    String crateId = UUID.randomUUID().toString();
+    @PostMapping("")
+    public RoCrate create(@RequestParam("file") MultipartFile file) throws IOException {
 
-    this.storageService.store(file.getInputStream(), crateId);
+        String crateId = this.storageClient.get().storeCrate(file.getInputStream());
 
-    return new RoCrate(crateId);
-  }
+        return new RoCrate(crateId);
+    }
 
-  @PostMapping("/crates/{crateId}")
-  @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void update(@PathVariable String crateId, @RequestParam("file") MultipartFile file) throws IOException {
-    // Add file to directory
-    this.storageService.add(file.getInputStream(), file.getOriginalFilename(), crateId);
-  }
+    @PostMapping("/{crateId}/**")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void update(
+            HttpServletRequest request,
+            @PathVariable String crateId,
+            @RequestParam("file") Optional<MultipartFile> file)
+            throws IOException {
+
+        String path = request.getRequestURI().split("/crates/" + crateId + "/")[1];
+
+        InputStream inputStream = file.isPresent() ? file.get().getInputStream() : InputStream.nullInputStream();
+
+        this.storageClient.get().addFile(crateId, inputStream, path);
+
+    }
+
+    @DeleteMapping("/{crateId}/**")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String crateId, HttpServletRequest request) throws IOException {
+
+        String path = request.getRequestURI().split("/crates/" + crateId + "/")[1];
+
+        this.storageClient.get().deleteFile(crateId, path);
+
+    }
 }

@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.kit.datamanager.rocraterest.storage.LocalStorageService;
-import edu.kit.datamanager.rocraterest.storage.StorageService;
+import edu.kit.datamanager.rocraterest.storage.LocalStorageZipStrategy;
+import edu.kit.datamanager.rocraterest.storage.StorageClient;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.UUID;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @WebMvcTest
@@ -33,16 +32,14 @@ public class ContextControllerTest {
 
   private ArrayList<String> crateIds = new ArrayList<>();
 
-  final private StorageService storageService = new LocalStorageService();
+  final private StorageClient storageClient = new StorageClient(new LocalStorageZipStrategy());
   final private ObjectMapper mapper = new ObjectMapper();
 
   @BeforeEach
   public void setUp() {
     InputStream is = getClass().getClassLoader().getResourceAsStream("basic-crate.zip");
 
-    String crateId = UUID.randomUUID().toString();
-
-    this.storageService.store(is, crateId);
+    String crateId = this.storageClient.get().storeCrate(is);
 
     this.crateIds.add(crateId);
   }
@@ -50,7 +47,7 @@ public class ContextControllerTest {
   @AfterEach
   public void tearDown() {
     for (String crateId : crateIds) {
-      storageService.delete(crateId);
+      this.storageClient.get().deleteCrate(crateId);
     }
     crateIds.clear();
   }

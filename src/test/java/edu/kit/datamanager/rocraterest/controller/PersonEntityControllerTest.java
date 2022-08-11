@@ -15,9 +15,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
-import edu.kit.datamanager.rocraterest.Helper;
-import edu.kit.datamanager.rocraterest.storage.LocalStorageService;
-import edu.kit.datamanager.rocraterest.storage.StorageService;
+import edu.kit.datamanager.rocraterest.storage.LocalStorageZipStrategy;
+import edu.kit.datamanager.rocraterest.storage.StorageClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,9 +28,8 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.UUID;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @WebMvcTest
 public class PersonEntityControllerTest {
 
@@ -40,24 +38,21 @@ public class PersonEntityControllerTest {
 
   private ArrayList<String> crateIds = new ArrayList<>();
 
-  final private StorageService storageService = new LocalStorageService();
+  final private StorageClient storageClient = new StorageClient(new LocalStorageZipStrategy());
   final private ObjectMapper mapper = new ObjectMapper();
 
   @BeforeEach
   public void setUp() {
     InputStream is = getClass().getClassLoader().getResourceAsStream("basic-crate.zip");
 
-    String crateId = UUID.randomUUID().toString();
-
-    this.storageService.store(is, crateId);
-
+    String crateId = this.storageClient.get().storeCrate(is);
     this.crateIds.add(crateId);
   }
 
   @AfterEach
   public void tearDown() {
     for (String crateId : crateIds) {
-      storageService.delete(crateId);
+      this.storageClient.get().deleteCrate(crateId);
     }
     crateIds.clear();
   }
@@ -78,7 +73,7 @@ public class PersonEntityControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
-    RoCrate crate = Helper.getCrate(crateId);
+    RoCrate crate = this.storageClient.get().getCrate(crateId);
 
     assertNotNull(crate.getContextualEntityById(personId));
 
@@ -100,7 +95,7 @@ public class PersonEntityControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
-    RoCrate crate = Helper.getCrate(crateId);
+    RoCrate crate = this.storageClient.get().getCrate(crateId);
 
     assertNotNull(crate.getContextualEntityById(personId));
 
@@ -110,11 +105,11 @@ public class PersonEntityControllerTest {
         .perform(put("/crates/" + crateId + "/entities/contextual/persons/" + keyEncoded)
             .content(
                 mapper.writeValueAsString(new PersonEntityController.PersonEntityPropertyPayload(
-                  payloadOverwrite)))
+                    payloadOverwrite)))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
-    crate = Helper.getCrate(crateId);
+    crate = this.storageClient.get().getCrate(crateId);
 
     assertNotNull(crate.getContextualEntityById(personId));
     assertNull(crate.getContextualEntityById(personId).getProperty("hobby"));
@@ -151,7 +146,9 @@ public class PersonEntityControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
-    RoCrate crate = Helper.getCrate(crateId);
+    RoCrate crate = this.storageClient.get().getCrate(crateId);
+
+    System.out.println(crate.getJsonMetadata());
 
     assertNull(crate.getContextualEntityById(personId));
   }
@@ -200,7 +197,7 @@ public class PersonEntityControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
-    RoCrate crate = Helper.getCrate(crateId);
+    RoCrate crate = this.storageClient.get().getCrate(crateId);
 
     assertNotNull(crate.getContextualEntityById(personId));
     assertEquals(crate.getContextualEntityById(personId).getProperty("name").asText(), "Alice");
@@ -218,7 +215,7 @@ public class PersonEntityControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
-    RoCrate crate = Helper.getCrate(crateId);
+    RoCrate crate = this.storageClient.get().getCrate(crateId);
 
     assertNotNull(crate.getContextualEntityById(personId));
     assertNull(crate.getContextualEntityById(personId).getProperty("name"));

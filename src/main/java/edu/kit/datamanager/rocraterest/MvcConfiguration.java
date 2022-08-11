@@ -11,8 +11,8 @@ import edu.kit.datamanager.rocraterest.interceptors.CrateInterceptor;
 @Configuration
 public class MvcConfiguration implements WebMvcConfigurer {
 
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(new CrateInterceptor());
-  }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new CrateInterceptor());
+    }
 }

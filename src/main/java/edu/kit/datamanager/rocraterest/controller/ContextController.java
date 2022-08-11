@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import edu.kit.datamanager.ro_crate.RoCrate;
 
 @RestController
+@RequestMapping("/crates/{crateId}/context")
 public class ContextController {
 
   static class PairValuePayload {
     public String value;
   }
 
-  @DeleteMapping("/crates/{crateId}/context/pairs/{key}")
+  @DeleteMapping("/pairs/{key}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void deletePair(@PathVariable String crateId, @PathVariable String key, @RequestAttribute RoCrate crate) {
 
@@ -23,7 +24,7 @@ public class ContextController {
 
   }
 
-  @PutMapping("/crates/{crateId}/context/pairs/{key}")
+  @PutMapping("/pairs/{key}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPair(@PathVariable String crateId, @PathVariable String key,
       @RequestBody PairValuePayload pairValuePayload,
@@ -33,7 +34,7 @@ public class ContextController {
 
   }
 
-  @PutMapping("/crates/{crateId}/context/urls/{url}")
+  @PutMapping("/urls/{url}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addUrl(@PathVariable String crateId, @PathVariable String url, @RequestAttribute RoCrate crate) {
 

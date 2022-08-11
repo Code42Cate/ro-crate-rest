@@ -8,21 +8,19 @@
 - [ ] Logger
 - [ ] StorageStrategy
 - [ ] GitHub Actions (coverage, matrix tests, codeql)
-- [ ] Readme
-- [ ] Monorepo integration?
+- [ ] Monorepo integration? -> Typescript Interfaces?
 
 ## Controller
 ### Crate Controller
-- [ ] Deleting file
+- [x] Deleting file
 - [ ] Listing files
-- [ ] Creating directoriees
-- [ ] Moving files into directory
-
+- [x] Creating directoriees
+  - [ ] Test
+- [x] Moving files into directory
+  - [ ] Test
 ### PersonEntity Controller
 - [x] Overwrite existing entity
 - [x] Test to delete property
-- [ ] Validation
-- [ ] Change multiple properties at once
 - [ ] Better error handling?
 
 ### ContextualEntity Controller

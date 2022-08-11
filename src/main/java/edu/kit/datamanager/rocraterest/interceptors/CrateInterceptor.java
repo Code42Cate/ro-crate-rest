@@ -13,17 +13,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
-import edu.kit.datamanager.ro_crate.reader.RoCrateReader;
-import edu.kit.datamanager.ro_crate.reader.ZipReader;
-import edu.kit.datamanager.ro_crate.writer.RoCrateWriter;
-import edu.kit.datamanager.ro_crate.writer.ZipWriter;
-import edu.kit.datamanager.rocraterest.storage.LocalStorageService;
+import edu.kit.datamanager.rocraterest.storage.LocalStorageZipStrategy;
+import edu.kit.datamanager.rocraterest.storage.StorageClient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class CrateInterceptor implements HandlerInterceptor {
 
-    private final LocalStorageService storageService = new LocalStorageService();
+    private StorageClient storageClient = new StorageClient(new LocalStorageZipStrategy());
 
     private String parseCrateId(HttpServletRequest request) {
         Map<String, String> pathVariables = (Map<String, String>) request
@@ -40,12 +37,11 @@ public class CrateInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if (!this.storageService.exists(crateId)) {
+        RoCrate crate = this.storageClient.get().getCrate(crateId);
+
+        if (crate == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
         }
-
-        RoCrateReader roCrateFolderReader = new RoCrateReader(new ZipReader());
-        RoCrate crate = roCrateFolderReader.readCrate(storageService.path(crateId));
 
         request.setAttribute("crate", crate);
         request.setAttribute("_crate_json", crate.getJsonMetadata());
@@ -70,8 +66,7 @@ public class CrateInterceptor implements HandlerInterceptor {
         JsonNode updatedJson = new ObjectMapper().readTree(updatedCrate.getJsonMetadata());
 
         if (!originalJson.equals(updatedJson)) {
-            RoCrateWriter roCrateZipWriter = new RoCrateWriter(new ZipWriter());
-            roCrateZipWriter.save(updatedCrate, this.storageService.path(crateId));
+            this.storageClient.get().storeCrate(crateId, updatedCrate);
         }
 
     }
