@@ -1,4 +1,4 @@
-package edu.kit.datamanager.rocraterest.services;
+package edu.kit.datamanager.ro_crate_rest.services;
 
 public class RoCrate {
 

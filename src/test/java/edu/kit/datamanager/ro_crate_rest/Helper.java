@@ -1,8 +1,8 @@
-package edu.kit.datamanager.rocraterest;
+package edu.kit.datamanager.ro_crate_rest;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
-import edu.kit.datamanager.rocraterest.storage.LocalStorageZipStrategy;
-import edu.kit.datamanager.rocraterest.storage.StorageClient;
+import edu.kit.datamanager.ro_crate_rest.storage.LocalStorageZipStrategy;
+import edu.kit.datamanager.ro_crate_rest.storage.StorageClient;
 
 public class Helper {
 

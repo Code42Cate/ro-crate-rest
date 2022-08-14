@@ -1,4 +1,4 @@
-package edu.kit.datamanager.rocraterest.storage;
+package edu.kit.datamanager.ro_crate_rest.storage;
 
 public class StorageClient {
 

@@ -1,4 +1,4 @@
-package edu.kit.datamanager.rocraterest.controller;
+package edu.kit.datamanager.ro_crate_rest.controller;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -35,7 +35,7 @@ public class PersonEntityController {
   }
 
   // TODO: This feels stupid
-  static class PersonEntityPropertyPayload {
+  public static class PersonEntityPropertyPayload {
     public JsonNode value;
 
     @JsonCreator

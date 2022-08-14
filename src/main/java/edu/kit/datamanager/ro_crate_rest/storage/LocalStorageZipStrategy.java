@@ -1,4 +1,4 @@
-package edu.kit.datamanager.rocraterest.storage;
+package edu.kit.datamanager.ro_crate_rest.storage;
 
 import java.io.File;
 import java.io.FileInputStream;

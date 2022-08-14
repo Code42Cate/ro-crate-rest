@@ -1,4 +1,4 @@
-package edu.kit.datamanager.rocraterest.interceptors;
+package edu.kit.datamanager.ro_crate_rest.interceptors;
 
 import java.util.Map;
 
@@ -13,8 +13,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
-import edu.kit.datamanager.rocraterest.storage.LocalStorageZipStrategy;
-import edu.kit.datamanager.rocraterest.storage.StorageClient;
+import edu.kit.datamanager.ro_crate_rest.storage.LocalStorageZipStrategy;
+import edu.kit.datamanager.ro_crate_rest.storage.StorageClient;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

@@ -1,4 +1,4 @@
-package edu.kit.datamanager.rocraterest.controller;
+package edu.kit.datamanager.ro_crate_rest.controller;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import edu.kit.datamanager.rocraterest.storage.LocalStorageZipStrategy;
-import edu.kit.datamanager.rocraterest.storage.StorageClient;
+import edu.kit.datamanager.ro_crate_rest.storage.LocalStorageZipStrategy;
+import edu.kit.datamanager.ro_crate_rest.storage.StorageClient;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;

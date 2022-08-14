@@ -1,4 +1,4 @@
-package edu.kit.datamanager.rocraterest.controller;
+package edu.kit.datamanager.ro_crate_rest.controller;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +15,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
-import edu.kit.datamanager.rocraterest.storage.LocalStorageZipStrategy;
-import edu.kit.datamanager.rocraterest.storage.StorageClient;
+import edu.kit.datamanager.ro_crate_rest.controller.PersonEntityController;
+import edu.kit.datamanager.ro_crate_rest.storage.LocalStorageZipStrategy;
+import edu.kit.datamanager.ro_crate_rest.storage.StorageClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

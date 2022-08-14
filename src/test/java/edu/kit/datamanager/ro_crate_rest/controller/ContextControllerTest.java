@@ -1,4 +1,4 @@
-package edu.kit.datamanager.rocraterest.controller;
+package edu.kit.datamanager.ro_crate_rest.controller;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.kit.datamanager.rocraterest.storage.LocalStorageZipStrategy;
-import edu.kit.datamanager.rocraterest.storage.StorageClient;
+import edu.kit.datamanager.ro_crate_rest.storage.LocalStorageZipStrategy;
+import edu.kit.datamanager.ro_crate_rest.storage.StorageClient;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

@@ -1,8 +1,5 @@
-package edu.kit.datamanager.rocraterest.controller;
+package edu.kit.datamanager.ro_crate_rest.controller;
 
-import edu.kit.datamanager.rocraterest.services.RoCrate;
-import edu.kit.datamanager.rocraterest.storage.LocalStorageZipStrategy;
-import edu.kit.datamanager.rocraterest.storage.StorageClient;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.FileNotFoundException;
@@ -17,6 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import edu.kit.datamanager.ro_crate_rest.services.RoCrate;
+import edu.kit.datamanager.ro_crate_rest.storage.LocalStorageZipStrategy;
+import edu.kit.datamanager.ro_crate_rest.storage.StorageClient;
 
 @RestController
 @RequestMapping("/crates")
