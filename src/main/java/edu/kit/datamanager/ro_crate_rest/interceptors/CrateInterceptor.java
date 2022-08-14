@@ -25,6 +25,10 @@ public class CrateInterceptor implements HandlerInterceptor {
     private String parseCrateId(HttpServletRequest request) {
         Map<String, String> pathVariables = (Map<String, String>) request
                 .getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+
+        if (pathVariables == null) {
+            return null;
+        }
         return pathVariables.get("crateId");
     }
 
