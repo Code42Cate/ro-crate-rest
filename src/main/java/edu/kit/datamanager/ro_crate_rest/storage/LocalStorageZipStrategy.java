@@ -85,21 +85,25 @@ public class LocalStorageZipStrategy implements StorageStrategy {
 
   }
 
+  // TODO
   @Override
   public void addFile(String id, InputStream file, String filename) {
-
+    return;
   }
 
+  // TODO
   @Override
   public void deleteFile(String id, String filename) {
-
+    return;
   }
 
+  // TODO
   @Override
   public File getFile(String id, String filename) {
     return null;
   }
 
+  // TODO
   @Override
   public File[] getFiles(String id) {
     return null;

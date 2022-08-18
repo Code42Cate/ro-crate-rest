@@ -25,7 +25,7 @@ public class CrateController {
 
     private final StorageClient storageClient = new StorageClient(new LocalStorageZipStrategy());
 
-    @RequestMapping(value = "/{crateId}", produces = "application/zip")
+    @RequestMapping(value = "/{crateId}", produces = "application/zip",method = RequestMethod.GET)
     public ResponseEntity<Resource> get(@PathVariable String crateId) throws FileNotFoundException {
 
         InputStream zipStream = this.storageClient.get().getCrateInputStream(crateId);
@@ -43,7 +43,7 @@ public class CrateController {
         this.storageClient.get().deleteCrate(crateId);
     }
 
-    @PostMapping("")
+    @PostMapping()
     public RoCrate create(@RequestParam("file") MultipartFile file) throws IOException {
 
         String crateId = this.storageClient.get().storeCrate(file.getInputStream());

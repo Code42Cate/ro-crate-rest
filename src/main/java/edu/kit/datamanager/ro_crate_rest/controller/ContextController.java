@@ -4,17 +4,16 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
+import edu.kit.datamanager.ro_crate_rest.dto.PairValuePayload;
 
 @RestController
 @RequestMapping("/crates/{crateId}/context")
 public class ContextController {
 
-  static class PairValuePayload {
-    public String value;
-  }
 
   @DeleteMapping("/pairs/{key}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
@@ -27,7 +26,7 @@ public class ContextController {
   @PutMapping("/pairs/{key}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPair(@PathVariable String crateId, @PathVariable String key,
-      @RequestBody PairValuePayload pairValuePayload,
+      @RequestBody @Validated PairValuePayload pairValuePayload,
       @RequestAttribute RoCrate crate) {
 
     crate = new RoCrate.RoCrateBuilder(crate).addValuePairToContext(key, pairValuePayload.value).build();

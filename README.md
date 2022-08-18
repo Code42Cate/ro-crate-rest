@@ -6,7 +6,7 @@
 - [x] JSON object building in tests
 - [ ] Interceptor tests
 - [ ] Logger
-- [ ] StorageStrategy
+- [x] StorageStrategy
 - [ ] GitHub Actions (coverage, matrix tests, codeql)
 - [ ] Monorepo integration? -> Typescript Interfaces?
 
@@ -27,6 +27,8 @@
 ### FileEntity Controller
 ### DatasetEntity Controller
 ### RootEntity Controller
-### OrganizationEntity Controller
 ### PlaceEntity Controller
 ### WorkflowEntity Controller
+
+- [x] OrganizationEntity Controller
+- [x] PlaceEntity Controller

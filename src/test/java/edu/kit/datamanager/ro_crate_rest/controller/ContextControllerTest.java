@@ -83,6 +83,21 @@ public class ContextControllerTest {
   }
 
   @Test
+  public void testAddPairMissingValue() throws Exception {
+
+    String crateId = crateIds.get(0);
+    String key = "key";
+    String keyEncoded = URLEncoder.encode(key, StandardCharsets.UTF_8);
+
+    this.mockMvc
+        .perform(put("/crates/" + crateId + "/context/pairs/" + keyEncoded)
+            .content(mapper.createObjectNode().toString())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
+
+  }
+
+  @Test
   public void testRemovePair() throws Exception {
 
     String crateId = crateIds.get(0);

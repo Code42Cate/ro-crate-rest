@@ -14,29 +14,30 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
 import edu.kit.datamanager.ro_crate.entities.contextual.ContextualEntity;
-import edu.kit.datamanager.ro_crate.entities.contextual.PersonEntity;
-import edu.kit.datamanager.ro_crate_rest.dto.PersonEntityPayload;
+import edu.kit.datamanager.ro_crate.entities.contextual.PlaceEntity;
+import edu.kit.datamanager.ro_crate_rest.dto.PlaceEntityPayload;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/crates/{crateId}/entities/contextual/persons/{personId}")
-public class PersonEntityController {
+@RequestMapping("/crates/{crateId}/entities/contextual/places/{placeId}")
+public class PlaceEntityController {
 
   @PutMapping()
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addPersonEntity(
-      @PathVariable String crateId, @PathVariable String personId,
-      @RequestBody @Validated PersonEntityPayload payload,
+  public void addPlaceEntity(
+      @PathVariable String crateId, @PathVariable String placeId,
+      @RequestBody @Validated PlaceEntityPayload payload,
       @RequestAttribute RoCrate crate) {
 
-    String decodedPersonId = URLDecoder.decode(personId, StandardCharsets.UTF_8);
+    String decodedPlaceId = URLDecoder.decode(placeId, StandardCharsets.UTF_8);
 
-    if (crate.getContextualEntityById(decodedPersonId) != null) {
-      crate.deleteEntityById(decodedPersonId);
+    if (crate.getContextualEntityById(decodedPlaceId) != null) {
+      crate.deleteEntityById(decodedPlaceId);
     }
 
-    PersonEntity entity = new PersonEntity.PersonEntityBuilder()
-        .setId(decodedPersonId)
+    PlaceEntity entity = new PlaceEntity.PlaceEntityBuilder()
+        .setId(decodedPlaceId)
+        .setGeo(payload.geo)
         .addProperty("name", payload.name)
         .build();
 
@@ -49,22 +50,22 @@ public class PersonEntityController {
 
   @DeleteMapping()
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void deletePersonEntity(
-      @PathVariable String crateId, @PathVariable String personId,
+  public void deletePlaceEntity(
+      @PathVariable String crateId, @PathVariable String placeId,
       @RequestAttribute RoCrate crate) {
 
-    crate.deleteEntityById(URLDecoder.decode(personId, StandardCharsets.UTF_8));
+    crate.deleteEntityById(URLDecoder.decode(placeId, StandardCharsets.UTF_8));
 
   }
 
   @GetMapping()
   @ResponseStatus(code = HttpStatus.OK)
-  public ObjectNode getPersonEntity(
-      @PathVariable String crateId, @PathVariable String personId,
+  public ObjectNode getPlaceEntity(
+      @PathVariable String crateId, @PathVariable String placeId,
       @RequestAttribute RoCrate crate,
       HttpServletResponse res) {
 
-    ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(personId, StandardCharsets.UTF_8));
+    ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(placeId, StandardCharsets.UTF_8));
 
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
@@ -75,12 +76,12 @@ public class PersonEntityController {
 
   @PutMapping("/{property}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addPropertyToPersonEntity(
-      @PathVariable String crateId, @PathVariable String personId, @PathVariable String property,
+  public void addPropertyToPlaceEntity(
+      @PathVariable String crateId, @PathVariable String placeId, @PathVariable String property,
       @RequestBody JsonNode body,
       @RequestAttribute RoCrate crate) {
 
-    ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(personId, StandardCharsets.UTF_8));
+    ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(placeId, StandardCharsets.UTF_8));
 
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
@@ -92,11 +93,11 @@ public class PersonEntityController {
 
   @DeleteMapping("/{property}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void deletePropertyFromPersonEntity(
-      @PathVariable String crateId, @PathVariable String personId, @PathVariable String property,
+  public void deletePropertyFromPlaceEntity(
+      @PathVariable String crateId, @PathVariable String placeId, @PathVariable String property,
       @RequestAttribute RoCrate crate) {
 
-    ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(personId, StandardCharsets.UTF_8));
+    ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(placeId, StandardCharsets.UTF_8));
 
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
