@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import edu.kit.datamanager.ro_crate_rest.services.RoCrate;
+import edu.kit.datamanager.ro_crate_rest.dto.RoCrateDto;
 import edu.kit.datamanager.ro_crate_rest.storage.LocalStorageZipStrategy;
 import edu.kit.datamanager.ro_crate_rest.storage.StorageClient;
 
@@ -44,11 +44,11 @@ public class CrateController {
     }
 
     @PostMapping()
-    public RoCrate create(@RequestParam("file") MultipartFile file) throws IOException {
+    public RoCrateDto create(@RequestParam("file") MultipartFile file) throws IOException {
 
         String crateId = this.storageClient.get().storeCrate(file.getInputStream());
 
-        return new RoCrate(crateId);
+        return new RoCrateDto(crateId);
     }
 
     @PostMapping("/{crateId}/**")
