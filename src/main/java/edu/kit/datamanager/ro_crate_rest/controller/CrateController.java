@@ -60,7 +60,7 @@ public class CrateController {
       throws IOException {
 
     String path = request.getRequestURI().split("/crates/" + crateId + "/")[1];
-
+    // If no file is provided, we create an empty directory
     InputStream inputStream = file.isPresent() ? file.get().getInputStream() : InputStream.nullInputStream();
 
     this.storageClient.get().addFile(crateId, inputStream, path);

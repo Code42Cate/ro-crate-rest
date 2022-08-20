@@ -32,7 +32,6 @@ public class OrganizationEntityController {
       @RequestAttribute RoCrate crate) {
 
     String decodedOrganizationId = URLDecoder.decode(organizationId, StandardCharsets.UTF_8);
-
     if (crate.getContextualEntityById(decodedOrganizationId) != null) {
       crate.deleteEntityById(decodedOrganizationId);
     }

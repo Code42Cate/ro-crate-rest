@@ -30,7 +30,6 @@ public class PlaceEntityController {
       @RequestAttribute RoCrate crate) {
 
     String decodedPlaceId = URLDecoder.decode(placeId, StandardCharsets.UTF_8);
-
     if (crate.getContextualEntityById(decodedPlaceId) != null) {
       crate.deleteEntityById(decodedPlaceId);
     }
@@ -66,7 +65,6 @@ public class PlaceEntityController {
       HttpServletResponse res) {
 
     ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(placeId, StandardCharsets.UTF_8));
-
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
     }
@@ -82,7 +80,6 @@ public class PlaceEntityController {
       @RequestAttribute RoCrate crate) {
 
     ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(placeId, StandardCharsets.UTF_8));
-
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
     }
@@ -98,7 +95,6 @@ public class PlaceEntityController {
       @RequestAttribute RoCrate crate) {
 
     ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(placeId, StandardCharsets.UTF_8));
-
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
     }

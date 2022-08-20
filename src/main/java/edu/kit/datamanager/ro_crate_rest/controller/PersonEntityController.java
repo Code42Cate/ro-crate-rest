@@ -30,7 +30,6 @@ public class PersonEntityController {
       @RequestAttribute RoCrate crate) {
 
     String decodedPersonId = URLDecoder.decode(personId, StandardCharsets.UTF_8);
-
     if (crate.getContextualEntityById(decodedPersonId) != null) {
       crate.deleteEntityById(decodedPersonId);
     }
@@ -65,7 +64,6 @@ public class PersonEntityController {
       HttpServletResponse res) {
 
     ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(personId, StandardCharsets.UTF_8));
-
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
     }
@@ -81,7 +79,6 @@ public class PersonEntityController {
       @RequestAttribute RoCrate crate) {
 
     ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(personId, StandardCharsets.UTF_8));
-
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
     }
@@ -97,7 +94,6 @@ public class PersonEntityController {
       @RequestAttribute RoCrate crate) {
 
     ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(personId, StandardCharsets.UTF_8));
-
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
     }
