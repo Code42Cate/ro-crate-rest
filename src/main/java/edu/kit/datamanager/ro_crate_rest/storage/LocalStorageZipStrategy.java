@@ -14,6 +14,8 @@ import edu.kit.datamanager.ro_crate.reader.RoCrateReader;
 import edu.kit.datamanager.ro_crate.reader.ZipReader;
 import edu.kit.datamanager.ro_crate.writer.RoCrateWriter;
 import edu.kit.datamanager.ro_crate.writer.ZipWriter;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
 
 public class LocalStorageZipStrategy implements StorageStrategy {
 
@@ -85,16 +87,30 @@ public class LocalStorageZipStrategy implements StorageStrategy {
 
   }
 
-  // TODO
   @Override
   public void addFile(String id, InputStream file, String filename) {
-    return;
+
+    try {
+      ZipFile zf = new ZipFile(this.getPath(id).toString());
+      ZipParameters parameters = new ZipParameters();
+      parameters.setFileNameInZip(filename);
+      zf.addStream(file, parameters);
+    } catch (IOException e) {
+      System.out.println("Could not delete file. Ignoring.");
+    }
+
   }
 
-  // TODO
   @Override
   public void deleteFile(String id, String filename) {
-    return;
+
+    try {
+      ZipFile zf = new ZipFile(this.getPath(id).toString());
+      zf.removeFile(filename);
+    } catch (IOException e) {
+      System.out.println("Could not delete file. Ignoring.");
+    }
+
   }
 
   // TODO

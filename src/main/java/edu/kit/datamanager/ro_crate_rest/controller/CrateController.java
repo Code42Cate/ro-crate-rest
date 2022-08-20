@@ -62,17 +62,17 @@ public class CrateController {
     this.storageClient.get().addFile(crateId, inputStream, path);
 
   }
-  /*
-   * @DeleteMapping("/{crateId}/**")
-   * 
-   * @ResponseStatus(code = HttpStatus.NO_CONTENT)
-   * public void delete(@PathVariable String crateId, HttpServletRequest request)
-   * throws IOException {
-   * 
-   * String path = request.getRequestURI().split("/crates/" + crateId + "/")[1];
-   * 
-   * this.storageClient.get().deleteFile(crateId, path);
-   * 
-   * }
-   */
+
+  @DeleteMapping("/{crateId}/**")
+
+  @ResponseStatus(code = HttpStatus.NO_CONTENT)
+  public void delete(@PathVariable String crateId, HttpServletRequest request)
+      throws IOException {
+
+    String path = request.getRequestURI().split("/crates/" + crateId + "/")[1];
+
+    this.storageClient.get().deleteFile(crateId, path);
+
+  }
+
 }

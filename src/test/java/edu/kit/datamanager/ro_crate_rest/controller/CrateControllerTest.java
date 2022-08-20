@@ -104,6 +104,7 @@ public class CrateControllerTest {
 
         .andReturn();
 
+    // TODO: Add assert to validate that file got added
   }
 
   @Test
@@ -115,6 +116,15 @@ public class CrateControllerTest {
 
         .andReturn();
 
+    // TODO: Add assert to validate that directory got added
+  }
+
+  @Test
+  public void testCrateDeleteFile() throws Exception {
+    this.mockMvc.perform(delete("/crates/" + this.crateIds.get(0) + "/example.zip"))
+        .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
+
+    // TODO: Add assert to validate that file got deleted
   }
 
 }
