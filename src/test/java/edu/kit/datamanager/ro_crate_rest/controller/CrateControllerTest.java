@@ -29,81 +29,81 @@ import java.util.ArrayList;
 @WebMvcTest
 public class CrateControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
-    private ArrayList<String> crateIds = new ArrayList<>();
+  private ArrayList<String> crateIds = new ArrayList<>();
 
-    final private StorageClient storageClient = new StorageClient(new LocalStorageZipStrategy());
+  final private StorageClient storageClient = new StorageClient(new LocalStorageZipStrategy());
 
-    @BeforeEach
-    public void setUp() {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("basic-crate.zip");
+  @BeforeEach
+  public void setUp() {
+    InputStream is = getClass().getClassLoader().getResourceAsStream("basic-crate.zip");
 
-        String crateId = this.storageClient.get().storeCrate(is);
+    String crateId = this.storageClient.get().storeCrate(is);
 
-        this.crateIds.add(crateId);
+    this.crateIds.add(crateId);
+  }
+
+  @AfterEach
+  public void tearDown() {
+    for (String crateId : crateIds) {
+      this.storageClient.get().deleteCrate(crateId);
     }
+    crateIds.clear();
+  }
 
-    @AfterEach
-    public void tearDown() {
-        for (String crateId : crateIds) {
-            this.storageClient.get().deleteCrate(crateId);
-        }
-        crateIds.clear();
-    }
+  @Test
+  public void testCratePost() throws Exception {
+    InputStream is = getClass().getClassLoader().getResourceAsStream("basic-crate.zip");
 
-    @Test
-    public void testCratePost() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("basic-crate.zip");
+    MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "basic-crate.zip",
+        "application/zip", is.readAllBytes());
 
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "basic-crate.zip",
-                "application/zip", is.readAllBytes());
+    MvcResult res = this.mockMvc.perform(multipart("/crates", null, null).file(mockMultipartFile))
+        .andExpect(status().isOk())
+        .andReturn();
 
-        MvcResult res = this.mockMvc.perform(multipart("/crates", null, null).file(mockMultipartFile))
-                .andExpect(status().isOk())
-                .andReturn();
+    String jsonString = res.getResponse().getContentAsString();
 
-        String jsonString = res.getResponse().getContentAsString();
+    String id = ((ObjectNode) new ObjectMapper().readTree(jsonString)).get("id").asText();
 
-        String id = ((ObjectNode) new ObjectMapper().readTree(jsonString)).get("id").asText();
+    assertNotNull(id);
 
-        assertNotNull(id);
+    this.crateIds.add(id);
 
-        this.crateIds.add(id);
+  }
 
-    }
+  @Test
+  public void testCrateGet() throws Exception {
+    this.mockMvc.perform(get("/crates/" + this.crateIds.get(0)))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType("application/zip"));
+  }
 
-    @Test
-    public void testCrateGet() throws Exception {
-        this.mockMvc.perform(get("/crates/" + this.crateIds.get(0)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/zip"));
-    }
+  @Test
+  public void testCrateDelete() throws Exception {
+    this.mockMvc.perform(delete("/crates/" + this.crateIds.get(0)))
+        .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
-    @Test
-    public void testCrateDelete() throws Exception {
-        this.mockMvc.perform(delete("/crates/" + this.crateIds.get(0)))
-                .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
+    assertNull(this.storageClient.get().getCrate(this.crateIds.get(0)));
 
-        assertNull(this.storageClient.get().getCrate(this.crateIds.get(0)));
+  }
 
-    }
+  @Test
+  public void testCrateUpdate() throws Exception {
+    InputStream is = getClass().getClassLoader().getResourceAsStream("basic-crate.zip");
 
-    @Test
-    public void testCrateUpdate() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("basic-crate.zip");
+    MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "basic-crate.zip",
+        "application/zip", is.readAllBytes());
 
-        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "basic-crate.zip",
-                "application/zip", is.readAllBytes());
+    this.mockMvc
+        .perform(multipart("/crates/" + this.crateIds.get(0) + "/example.zip", null, null)
+            .file(mockMultipartFile))
+        .andExpect(status().is(HttpStatus.NO_CONTENT.value()))
 
-        this.mockMvc
-                .perform(multipart("/crates/" + this.crateIds.get(0) + "/example.zip", null, null)
-                        .file(mockMultipartFile))
-                .andExpect(status().is(HttpStatus.NO_CONTENT.value()))
+        .andReturn();
 
-                .andReturn();
-
-    }
+  }
 
 }

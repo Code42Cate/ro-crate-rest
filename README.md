@@ -1,34 +1,23 @@
-# TODO:
+# ro-crate-rest
+A RESTful API that aims to mirror the functionality provided by the java library [ro-crate-java](https://github.com/kit-data-manager/ro-crate-java/)
 
-## General
-- [ ] JSON Validation
-- [ ] README.md
-- [x] JSON object building in tests
-- [ ] Interceptor tests
-- [ ] Logger
-- [x] StorageStrategy
-- [ ] GitHub Actions (coverage, matrix tests, codeql)
-- [ ] Monorepo integration? -> Typescript Interfaces?
+You can either build and run it yourself, or use the docker image.
 
-## Controller
-### Crate Controller
-- [x] Deleting file
-- [ ] Listing files
-- [x] Creating directoriees
-  - [ ] Test
-- [x] Moving files into directory
-  - [ ] Test
-### PersonEntity Controller
-- [x] Overwrite existing entity
-- [x] Test to delete property
-- [ ] Better error handling?
+## Documentation
 
-### ContextualEntity Controller
-### FileEntity Controller
-### DatasetEntity Controller
-### RootEntity Controller
-### PlaceEntity Controller
-### WorkflowEntity Controller
+For documentation, run the server and visit [swagger-ui](http://localhost:8080/swagger-ui/index.html)
 
-- [x] OrganizationEntity Controller
-- [x] PlaceEntity Controller
+
+## Installation
+
+
+### DIY
+
+```bash
+./gradlew build
+./gradlew bootRun
+```
+
+### Docker
+
+TODO

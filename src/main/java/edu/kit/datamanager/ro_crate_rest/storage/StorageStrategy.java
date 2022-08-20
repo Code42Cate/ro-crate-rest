@@ -13,7 +13,8 @@ public interface StorageStrategy {
   /**
    * Used for the initial storing of the crate.
    * 
-   * @param zip The uploaded zip file to be saved as a crate
+   * @param zip
+   *          The uploaded zip file to be saved as a crate
    * 
    * @return The id of the crate in a URL compatible format
    */
@@ -22,21 +23,24 @@ public interface StorageStrategy {
   /**
    * Save a RoCrate
    * 
-   * @param id The id of the crate to be deleted
+   * @param id
+   *          The id of the crate to be deleted
    */
   void storeCrate(String id, RoCrate crate);
 
   /**
    * Read a crate
    * 
-   * @param id The id of the crate to be read
+   * @param id
+   *          The id of the crate to be read
    */
   RoCrate getCrate(String id);
 
   /**
    * Get InputStream of crate zip file
    * 
-   * @param id The id of the crate to be loaded
+   * @param id
+   *          The id of the crate to be loaded
    * 
    * @return InputStream of crate zip file or null if crate does not exist
    */
@@ -45,33 +49,39 @@ public interface StorageStrategy {
   /**
    * Delete a crate
    * 
-   * @param id The id of the crate to be deleted
+   * @param id
+   *          The id of the crate to be deleted
    */
   void deleteCrate(String id);
 
   /**
    * Add file or directory to crate.
    * 
-   * @param file Can either be a normal file or NullInputStream to add directory
+   * @param file
+   *          Can either be a normal file or NullInputStream to add directory
    * 
-   * @param filename Name of file or directory. Can be nested, missing parent
-   * directories will be created
+   * @param filename
+   *          Name of file or directory. Can be nested, missing parent
+   *          directories will be created
    */
   void addFile(String id, InputStream file, String filename);
 
   /**
    * Delete file or directory from crate.
    * 
-   * @param filename Name of file or directory.
+   * @param filename
+   *          Name of file or directory.
    */
   void deleteFile(String id, String filename);
 
   /**
    * Get file or directory from crate.
    * 
-   * @param id The id of the crate to be loaded
+   * @param id
+   *          The id of the crate to be loaded
    * 
-   * @param filename Name of file or directory. Can be nested.
+   * @param filename
+   *          Name of file or directory. Can be nested.
    * 
    * @return read-only file or directory
    */
@@ -80,7 +90,8 @@ public interface StorageStrategy {
   /**
    * Get all files as unorderd array from crate.
    * 
-   * @param id The id of the crate to be loaded
+   * @param id
+   *          The id of the crate to be loaded
    */
   File[] getFiles(String id);
 

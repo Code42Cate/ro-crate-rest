@@ -43,7 +43,7 @@ public class ContextualEntityController {
     }
 
     // TODO: wip
-    // 
+    //
     entity.addType(payload.properties.get("@type").asText());
 
     // System.out.println(entity.getProperties().get("@type"));

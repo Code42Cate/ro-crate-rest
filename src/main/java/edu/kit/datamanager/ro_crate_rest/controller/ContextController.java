@@ -14,7 +14,6 @@ import edu.kit.datamanager.ro_crate_rest.dto.PairValueDto;
 @RequestMapping("/crates/{crateId}/context")
 public class ContextController {
 
-
   @DeleteMapping("/pairs/{key}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void deletePair(@PathVariable String crateId, @PathVariable String key, @RequestAttribute RoCrate crate) {

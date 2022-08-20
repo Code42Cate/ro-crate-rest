@@ -144,7 +144,8 @@ public class PlaceEntityControllerTest {
 
     assertNotNull(crate.getContextualEntityById(placeId));
 
-    JsonNode payloadOverwrite = this.mapper.createObjectNode().put("name", name).put("geo", "http://sws.geonames.org/8152663/");
+    JsonNode payloadOverwrite = this.mapper.createObjectNode().put("name", name).put("geo",
+        "http://sws.geonames.org/8152663/");
 
     this.mockMvc
         .perform(put("/crates/" + crateId + "/entities/contextual/places/" + encodedPlaceId)
