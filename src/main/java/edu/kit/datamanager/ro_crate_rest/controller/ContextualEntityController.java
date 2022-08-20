@@ -2,7 +2,6 @@ package edu.kit.datamanager.ro_crate_rest.controller;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
