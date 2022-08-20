@@ -91,7 +91,7 @@ public class CrateControllerTest {
   }
 
   @Test
-  public void testCrateUpdate() throws Exception {
+  public void testCrateAddFile() throws Exception {
     InputStream is = getClass().getClassLoader().getResourceAsStream("basic-crate.zip");
 
     MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "basic-crate.zip",
@@ -100,6 +100,17 @@ public class CrateControllerTest {
     this.mockMvc
         .perform(multipart("/crates/" + this.crateIds.get(0) + "/example.zip", null, null)
             .file(mockMultipartFile))
+        .andExpect(status().is(HttpStatus.NO_CONTENT.value()))
+
+        .andReturn();
+
+  }
+
+  @Test
+  public void testCrateAddDirectory() throws Exception {
+
+    this.mockMvc
+        .perform(multipart("/crates/" + this.crateIds.get(0) + "/directory/somewhere", null, null))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()))
 
         .andReturn();

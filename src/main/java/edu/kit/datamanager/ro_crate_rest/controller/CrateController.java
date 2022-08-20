@@ -30,10 +30,6 @@ public class CrateController {
 
     InputStream zipStream = this.storageClient.get().getCrateInputStream(crateId);
 
-    if (zipStream == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find crate");
-    }
-
     return new ResponseEntity<>(new InputStreamResource(zipStream), HttpStatus.OK);
   }
 
