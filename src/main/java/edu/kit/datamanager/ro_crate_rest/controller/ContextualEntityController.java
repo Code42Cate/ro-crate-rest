@@ -2,9 +2,12 @@ package edu.kit.datamanager.ro_crate_rest.controller;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,29 +27,22 @@ public class ContextualEntityController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addContextualEntity(
       @PathVariable String crateId, @PathVariable String contextualId,
-      @RequestBody ContextualEntityDto payload,
+      @RequestBody @Validated ContextualEntityDto payload,
       @RequestAttribute RoCrate crate) {
 
     String decodedContextualId = URLDecoder.decode(contextualId, StandardCharsets.UTF_8);
-
     if (crate.getContextualEntityById(decodedContextualId) != null) {
       crate.deleteEntityById(decodedContextualId);
     }
 
     ContextualEntity entity = new ContextualEntity.ContextualEntityBuilder()
         .setId(decodedContextualId)
+        .addTypes(List.copyOf(payload.type))
         .build();
 
     for (Map.Entry<String, JsonNode> entry : payload.properties.entrySet()) {
-      System.out.println(entry.getKey() + ": " + entry.getValue());
       entity.addProperty(entry.getKey(), entry.getValue());
     }
-
-    // TODO: wip
-    //
-    entity.addType(payload.properties.get("@type").asText());
-
-    // System.out.println(entity.getProperties().get("@type"));
 
     crate = new RoCrate.RoCrateBuilder(crate).addContextualEntity(entity).build();
   }
@@ -69,7 +65,6 @@ public class ContextualEntityController {
       HttpServletResponse res) {
 
     ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(contextualId, StandardCharsets.UTF_8));
-
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
     }
@@ -85,7 +80,6 @@ public class ContextualEntityController {
       @RequestAttribute RoCrate crate) {
 
     ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(contextualId, StandardCharsets.UTF_8));
-
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
     }
@@ -101,7 +95,6 @@ public class ContextualEntityController {
       @RequestAttribute RoCrate crate) {
 
     ContextualEntity entity = crate.getContextualEntityById(URLDecoder.decode(contextualId, StandardCharsets.UTF_8));
-
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
     }

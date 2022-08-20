@@ -32,7 +32,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-@Disabled
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @WebMvcTest
 public class ContextualEntityControllerTest {
@@ -71,10 +70,6 @@ public class ContextualEntityControllerTest {
     String type = "File";
     ObjectNode payload = this.mapper.createObjectNode().put("name", name).put("@type", type);
 
-    // payload.putArray("@type").add(type);
-
-    System.out.println(payload.toPrettyString());
-
     this.mockMvc
         .perform(put("/crates/" + crateId + "/entities/contextual/" + encodedEntityId)
             .content(
@@ -91,31 +86,82 @@ public class ContextualEntityControllerTest {
   }
 
   @Test
-  public void testAddExistingEntity() throws Exception {
+  public void testAddEntityMultipleTypes() throws Exception {
 
     String crateId = crateIds.get(0);
-    String placeId = "http://sws.geonames.org/8152663/";
-    String encodedPlaceId = URLEncoder.encode(placeId, StandardCharsets.UTF_8);
-    String name = "Catalina Memorial Park";
-    JsonNode payload = this.mapper.createObjectNode().put("name", name).put("geo", "http://sws.geonames.org/8152663/")
-        .put("cool", "yes");
+    String entityId = "cool_entity";
+    String encodedEntityId = URLEncoder.encode(entityId, StandardCharsets.UTF_8);
+    String name = "Some Entity";
+    String type = "File";
+    String type1 = "File1";
+    ObjectNode payload = this.mapper.createObjectNode().put("name", name);
+
+    payload.putArray("@type").add(type).add("File1");
 
     this.mockMvc
-        .perform(put("/crates/" + crateId + "/entities/contextual/" + encodedPlaceId)
+        .perform(put("/crates/" + crateId + "/entities/contextual/" + encodedEntityId)
             .content(
-                mapper.writeValueAsString(
-                    payload))
+                mapper.writeValueAsString(payload))
             .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
 
     RoCrate crate = this.storageClient.get().getCrate(crateId);
 
-    assertNotNull(crate.getContextualEntityById(placeId));
+    assertNotNull(crate.getContextualEntityById(entityId));
+    assertEquals(crate.getContextualEntityById(entityId).getProperty("name").asText(), name);
 
-    JsonNode payloadOverwrite = this.mapper.createObjectNode().put("name", "Alice");
+    for (final JsonNode someType : crate.getContextualEntityById(entityId).getProperties().get("@type")) {
+      assertTrue(someType.asText().equals(type) || someType.asText().equals(type1));
+    }
+
+  }
+
+  @Test
+  public void testAddEntityMissingType() throws Exception {
+
+    String crateId = crateIds.get(0);
+    String entityId = "cool_entity";
+    String encodedEntityId = URLEncoder.encode(entityId, StandardCharsets.UTF_8);
+    String name = "Some Entity";
+    ObjectNode payload = this.mapper.createObjectNode().put("name", name);
 
     this.mockMvc
-        .perform(put("/crates/" + crateId + "/entities/contextual/" + encodedPlaceId)
+        .perform(put("/crates/" + crateId + "/entities/contextual/" + encodedEntityId)
+            .content(
+                mapper.writeValueAsString(payload))
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
+
+    RoCrate crate = this.storageClient.get().getCrate(crateId);
+
+    assertNull(crate.getContextualEntityById(entityId));
+
+  }
+
+  @Test
+  public void testAddExistingEntity() throws Exception {
+    String crateId = crateIds.get(0);
+    String entityId = "cool_entity";
+    String encodedEntityId = URLEncoder.encode(entityId, StandardCharsets.UTF_8);
+    String name = "Some Entity";
+    String type = "File";
+    ObjectNode payload = this.mapper.createObjectNode().put("name", name).put("@type", type);
+
+    this.mockMvc
+        .perform(put("/crates/" + crateId + "/entities/contextual/" + encodedEntityId)
+            .content(
+                mapper.writeValueAsString(payload))
+            .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
+
+    RoCrate crate = this.storageClient.get().getCrate(crateId);
+
+    assertNotNull(crate.getContextualEntityById(entityId));
+
+    ObjectNode payloadOverwrite = this.mapper.createObjectNode().put("@type", type);
+
+    this.mockMvc
+        .perform(put("/crates/" + crateId + "/entities/contextual/" + encodedEntityId)
             .content(
                 mapper.writeValueAsString((payloadOverwrite)))
             .contentType(MediaType.APPLICATION_JSON))
@@ -123,8 +169,8 @@ public class ContextualEntityControllerTest {
 
     crate = this.storageClient.get().getCrate(crateId);
 
-    assertNotNull(crate.getContextualEntityById(placeId));
-    assertNull(crate.getContextualEntityById(placeId).getProperty("cool"));
+    assertNotNull(crate.getContextualEntityById(entityId));
+    assertNull(crate.getContextualEntityById(entityId).getProperty("cool"));
 
   }
 
