@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.kit.datamanager.ro_crate.RoCrate;
 import edu.kit.datamanager.ro_crate.entities.contextual.ContextualEntity;
 import edu.kit.datamanager.ro_crate.entities.contextual.PlaceEntity;
-import edu.kit.datamanager.ro_crate_rest.dto.PlaceEntityPayload;
+import edu.kit.datamanager.ro_crate_rest.dto.PlaceEntityDto;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -26,7 +26,7 @@ public class PlaceEntityController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPlaceEntity(
       @PathVariable String crateId, @PathVariable String placeId,
-      @RequestBody @Validated PlaceEntityPayload payload,
+      @RequestBody @Validated PlaceEntityDto payload,
       @RequestAttribute RoCrate crate) {
 
     String decodedPlaceId = URLDecoder.decode(placeId, StandardCharsets.UTF_8);

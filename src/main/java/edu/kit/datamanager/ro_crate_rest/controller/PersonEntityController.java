@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.kit.datamanager.ro_crate.RoCrate;
 import edu.kit.datamanager.ro_crate.entities.contextual.ContextualEntity;
 import edu.kit.datamanager.ro_crate.entities.contextual.PersonEntity;
-import edu.kit.datamanager.ro_crate_rest.dto.PersonEntityPayload;
+import edu.kit.datamanager.ro_crate_rest.dto.PersonEntityDto;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -26,7 +26,7 @@ public class PersonEntityController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPersonEntity(
       @PathVariable String crateId, @PathVariable String personId,
-      @RequestBody @Validated PersonEntityPayload payload,
+      @RequestBody @Validated PersonEntityDto payload,
       @RequestAttribute RoCrate crate) {
 
     String decodedPersonId = URLDecoder.decode(personId, StandardCharsets.UTF_8);

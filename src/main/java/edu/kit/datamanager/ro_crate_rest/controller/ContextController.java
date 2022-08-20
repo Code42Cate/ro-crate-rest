@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
-import edu.kit.datamanager.ro_crate_rest.dto.PairValuePayload;
+import edu.kit.datamanager.ro_crate_rest.dto.PairValueDto;
 
 @RestController
 @RequestMapping("/crates/{crateId}/context")
@@ -26,7 +26,7 @@ public class ContextController {
   @PutMapping("/pairs/{key}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPair(@PathVariable String crateId, @PathVariable String key,
-      @RequestBody @Validated PairValuePayload pairValuePayload,
+      @RequestBody @Validated PairValueDto pairValuePayload,
       @RequestAttribute RoCrate crate) {
 
     crate = new RoCrate.RoCrateBuilder(crate).addValuePairToContext(key, pairValuePayload.value).build();

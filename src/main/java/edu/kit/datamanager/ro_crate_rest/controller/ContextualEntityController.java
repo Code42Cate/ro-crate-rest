@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
 import edu.kit.datamanager.ro_crate.entities.contextual.ContextualEntity;
-import edu.kit.datamanager.ro_crate_rest.dto.ContextualEntityPayload;
+import edu.kit.datamanager.ro_crate_rest.dto.ContextualEntityDto;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -24,7 +24,7 @@ public class ContextualEntityController {
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addContextualEntity(
       @PathVariable String crateId, @PathVariable String contextualId,
-      @RequestBody ContextualEntityPayload payload,
+      @RequestBody ContextualEntityDto payload,
       @RequestAttribute RoCrate crate) {
 
     String decodedContextualId = URLDecoder.decode(contextualId, StandardCharsets.UTF_8);

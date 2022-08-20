@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.kit.datamanager.ro_crate.RoCrate;
 import edu.kit.datamanager.ro_crate.entities.contextual.ContextualEntity;
 import edu.kit.datamanager.ro_crate.entities.contextual.OrganizationEntity;
-import edu.kit.datamanager.ro_crate_rest.dto.OrganizationEntityPayload;
+import edu.kit.datamanager.ro_crate_rest.dto.OrganizationEntityDto;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -28,7 +28,7 @@ public class OrganizationEntityController {
   @Validated
   public void addOrganizationEntity(
       @PathVariable String crateId, @PathVariable String organizationId,
-      @RequestBody @Validated OrganizationEntityPayload payload,
+      @RequestBody @Validated OrganizationEntityDto payload,
       @RequestAttribute RoCrate crate) {
 
     String decodedOrganizationId = URLDecoder.decode(organizationId, StandardCharsets.UTF_8);

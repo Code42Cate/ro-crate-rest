@@ -6,7 +6,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class ContextualEntityPayload {
+public class ContextualEntityDto {
   public Map<String, JsonNode> properties = new HashMap<String, JsonNode>();
 
   @JsonAnySetter

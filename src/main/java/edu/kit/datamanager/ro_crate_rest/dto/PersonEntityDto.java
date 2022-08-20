@@ -8,13 +8,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class PlaceEntityPayload {
+public class PersonEntityDto {
 
-  @NotBlank(message = "Name is mandatory")
+  @NotBlank(message = "name is mandatory")
   public String name;
-
-  @NotBlank(message = "geo is mandatory")
-  public String geo;
 
   public Map<String, JsonNode> properties = new HashMap<String, JsonNode>();
 
@@ -22,5 +19,4 @@ public class PlaceEntityPayload {
   public void add(String key, JsonNode value) {
     properties.put(key, value);
   }
-
 }
