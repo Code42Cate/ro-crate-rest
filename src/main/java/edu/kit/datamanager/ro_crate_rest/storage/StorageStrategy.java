@@ -74,6 +74,8 @@ public interface StorageStrategy {
    */
   void deleteFile(String id, String filename);
 
+  // TODO: Not sure how the File interface should actually look. This is a
+  // placeholder for now
   /**
    * Get file or directory from crate.
    * 
