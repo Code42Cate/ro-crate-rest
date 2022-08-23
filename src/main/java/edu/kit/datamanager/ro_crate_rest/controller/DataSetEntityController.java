@@ -16,28 +16,28 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.kit.datamanager.ro_crate.RoCrate;
 import edu.kit.datamanager.ro_crate.entities.data.DataEntity;
-import edu.kit.datamanager.ro_crate.entities.data.FileEntity;
-import edu.kit.datamanager.ro_crate_rest.dto.FileEntityDto;
+import edu.kit.datamanager.ro_crate.entities.data.DataSetEntity;
+import edu.kit.datamanager.ro_crate_rest.dto.DataSetEntityDto;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/crates/{crateId}/entities/data/files/{fileId}")
-public class FileEntityController {
+@RequestMapping("/crates/{crateId}/entities/data/datasets/{dataSetId}")
+public class DataSetEntityController {
 
   @PutMapping()
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addFileEntity(
-      @PathVariable String crateId, @PathVariable @Validated String fileId,
-      @RequestBody @Validated FileEntityDto payload,
+  public void addDataSetEntity(
+      @PathVariable String crateId, @PathVariable @Validated String dataSetId,
+      @RequestBody @Validated DataSetEntityDto payload,
       @RequestAttribute RoCrate crate) {
 
-    String decodedFileId = URLDecoder.decode(fileId, StandardCharsets.UTF_8);
-    if (crate.getDataEntityById(decodedFileId) != null) {
-      crate.deleteEntityById(decodedFileId);
+    String decodedDataSetId = URLDecoder.decode(dataSetId, StandardCharsets.UTF_8);
+    if (crate.getDataEntityById(decodedDataSetId) != null) {
+      crate.deleteEntityById(decodedDataSetId);
     }
 
-    FileEntity entity = new FileEntity.FileEntityBuilder()
-        .setId(decodedFileId)
+    DataSetEntity entity = new DataSetEntity.DataSetBuilder()
+        .setId(decodedDataSetId)
         .build();
 
     for (Map.Entry<String, JsonNode> entry : payload.properties.entrySet()) {
@@ -49,24 +49,24 @@ public class FileEntityController {
 
   @DeleteMapping()
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void deleteFileEntity(
-      @PathVariable String crateId, @PathVariable String fileId,
+  public void deleteDataSetEntity(
+      @PathVariable String crateId, @PathVariable String dataSetId,
       @RequestAttribute RoCrate crate) {
 
-    crate.deleteEntityById(URLDecoder.decode(fileId, StandardCharsets.UTF_8));
+    crate.deleteEntityById(URLDecoder.decode(dataSetId, StandardCharsets.UTF_8));
 
   }
 
   @GetMapping()
   @ResponseStatus(code = HttpStatus.OK)
-  public ObjectNode getFileEntity(
-      @PathVariable String crateId, @PathVariable String fileId,
+  public ObjectNode getDataSetEntity(
+      @PathVariable String crateId, @PathVariable String dataSetId,
       @RequestAttribute RoCrate crate,
       HttpServletResponse res) {
 
-    System.out.println(URLDecoder.decode(fileId, StandardCharsets.UTF_8));
+    System.out.println(URLDecoder.decode(dataSetId, StandardCharsets.UTF_8));
 
-    DataEntity entity = crate.getDataEntityById(URLDecoder.decode(fileId, StandardCharsets.UTF_8));
+    DataEntity entity = crate.getDataEntityById(URLDecoder.decode(dataSetId, StandardCharsets.UTF_8));
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
     }
@@ -76,12 +76,12 @@ public class FileEntityController {
 
   @PutMapping("/{property}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void addPropertyToFileEntity(
-      @PathVariable String crateId, @PathVariable String fileId, @PathVariable String property,
+  public void addPropertyToDataSetEntity(
+      @PathVariable String crateId, @PathVariable String dataSetId, @PathVariable String property,
       @RequestBody JsonNode body,
       @RequestAttribute RoCrate crate) {
 
-    DataEntity entity = crate.getDataEntityById(URLDecoder.decode(fileId, StandardCharsets.UTF_8));
+    DataEntity entity = crate.getDataEntityById(URLDecoder.decode(dataSetId, StandardCharsets.UTF_8));
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
     }
@@ -92,11 +92,11 @@ public class FileEntityController {
 
   @DeleteMapping("/{property}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
-  public void deletePropertyFromFileEntity(
-      @PathVariable String crateId, @PathVariable String fileId, @PathVariable String property,
+  public void deletePropertyFromDataSetEntity(
+      @PathVariable String crateId, @PathVariable String dataSetId, @PathVariable String property,
       @RequestAttribute RoCrate crate) {
 
-    DataEntity entity = crate.getDataEntityById(URLDecoder.decode(fileId, StandardCharsets.UTF_8));
+    DataEntity entity = crate.getDataEntityById(URLDecoder.decode(dataSetId, StandardCharsets.UTF_8));
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find entity");
     }
