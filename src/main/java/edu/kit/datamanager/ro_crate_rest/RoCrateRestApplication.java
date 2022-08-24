@@ -11,19 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.kit.datamanager.ro_crate.RoCrate;
-
 @SpringBootApplication
 @RestController
 public class RoCrateRestApplication {
 
   public static void main(String[] args) {
-
-    RoCrate crate = new RoCrate.RoCrateBuilder().build();
-
-    System.out.println(crate.getJsonMetadata().toString());
-    System.out.println(crate.getAllDataEntities().get(0).getId());
-
     SpringApplication.run(RoCrateRestApplication.class, args);
   }
 

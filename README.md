@@ -20,4 +20,7 @@ For documentation, run the server and visit [swagger-ui](http://localhost:8080/s
 
 ### Docker
 
-TODO
+crates/{crateId}/entities/ro-crate-metadata.json
+  put
+  put /parameter
+  get
