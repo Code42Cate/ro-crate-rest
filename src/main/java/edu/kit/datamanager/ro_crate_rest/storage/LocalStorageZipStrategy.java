@@ -113,9 +113,16 @@ public class LocalStorageZipStrategy implements StorageStrategy {
 
   }
 
-  // TODO
   @Override
-  public File getFile(String id, String filename) {
+  public InputStream getFileInputStream(String id, String filename) {
+    ZipFile zf = new ZipFile(this.getPath(id).toString());
+    try {
+      return zf.getInputStream(zf.getFileHeader(filename));
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
     return null;
   }
 

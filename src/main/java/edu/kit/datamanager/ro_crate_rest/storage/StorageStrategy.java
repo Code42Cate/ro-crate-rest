@@ -87,7 +87,7 @@ public interface StorageStrategy {
    * 
    * @return read-only file or directory
    */
-  File getFile(String id, String filename);
+  InputStream getFileInputStream(String id, String filename);
 
   /**
    * Get all files as unorderd array from crate.
