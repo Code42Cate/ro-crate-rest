@@ -19,10 +19,20 @@ import edu.kit.datamanager.ro_crate_rest.dto.DataEntityDto;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/crates/{crateId}/entities/data/{dataId}")
+@RequestMapping("/crates/{crateId}/entities/data/")
 public class DataEntityController {
 
-  @PutMapping()
+  @GetMapping("/")
+  @ResponseStatus(code = HttpStatus.OK)
+  public List<DataEntity> getDataEntities(
+      @PathVariable String crateId,
+      @RequestAttribute RoCrate crate,
+      HttpServletResponse res) {
+
+    return crate.getAllDataEntities();
+  }
+
+  @PutMapping("/{dataId}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addDataEntity(
       @PathVariable String crateId, @PathVariable String dataId,
@@ -46,7 +56,7 @@ public class DataEntityController {
     crate = new RoCrate.RoCrateBuilder(crate).addDataEntity(entity).build();
   }
 
-  @DeleteMapping()
+  @DeleteMapping("/{dataId}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void deleteDataEntity(
       @PathVariable String crateId, @PathVariable String dataId,
@@ -56,7 +66,7 @@ public class DataEntityController {
 
   }
 
-  @GetMapping()
+  @GetMapping("/{dataId}")
   @ResponseStatus(code = HttpStatus.OK)
   public ObjectNode getDataEntity(
       @PathVariable String crateId, @PathVariable String dataId,
@@ -71,7 +81,7 @@ public class DataEntityController {
     return entity.getProperties();
   }
 
-  @PutMapping("/{property}")
+  @PutMapping("/{dataId}/{property}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPropertyToDataEntity(
       @PathVariable String crateId, @PathVariable String dataId, @PathVariable String property,
@@ -87,7 +97,7 @@ public class DataEntityController {
 
   }
 
-  @DeleteMapping("/{property}")
+  @DeleteMapping("/{dataId}/{property}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void deletePropertyFromDataEntity(
       @PathVariable String crateId, @PathVariable String dataId, @PathVariable String property,

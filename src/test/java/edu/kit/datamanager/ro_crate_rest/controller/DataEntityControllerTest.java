@@ -225,6 +225,29 @@ public class DataEntityControllerTest {
   }
 
   @Test
+  public void getEntities() throws Exception {
+
+    String crateId = this.crateIds.get(0);
+
+    MvcResult res = this.mockMvc
+        .perform(get("/crates/" + crateId + "/entities/data/"))
+        .andExpect(status().is(HttpStatus.OK.value())).andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andReturn();
+
+    JsonNode entities = this.mapper.readTree(res.getResponse().getContentAsString());
+
+    assertTrue(entities.isArray());
+
+    assertTrue(entities.size() > 0);
+
+    for (final JsonNode entity : entities) {
+      assertTrue(entity.has("@id"));
+      assertTrue(entity.has("@type"));
+    }
+
+  }
+
+  @Test
   public void getInvalidEntity() throws Exception {
 
     String crateId = this.crateIds.get(0);

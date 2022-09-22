@@ -19,10 +19,20 @@ import edu.kit.datamanager.ro_crate_rest.dto.ContextualEntityDto;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/crates/{crateId}/entities/contextual/{contextualId}")
+@RequestMapping("/crates/{crateId}/entities/contextual/")
 public class ContextualEntityController {
 
-  @PutMapping()
+  @GetMapping("/")
+  @ResponseStatus(code = HttpStatus.OK)
+  public List<ContextualEntity> getDataEntities(
+      @PathVariable String crateId,
+      @RequestAttribute RoCrate crate,
+      HttpServletResponse res) {
+
+    return crate.getAllContextualEntities();
+  }
+
+  @PutMapping("/{contextualId}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addContextualEntity(
       @PathVariable String crateId, @PathVariable String contextualId,
@@ -46,7 +56,7 @@ public class ContextualEntityController {
     crate = new RoCrate.RoCrateBuilder(crate).addContextualEntity(entity).build();
   }
 
-  @DeleteMapping()
+  @DeleteMapping("/{contextualId}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void deleteContextualEntity(
       @PathVariable String crateId, @PathVariable String contextualId,
@@ -56,7 +66,7 @@ public class ContextualEntityController {
 
   }
 
-  @GetMapping()
+  @GetMapping("/{contextualId}")
   @ResponseStatus(code = HttpStatus.OK)
   public ObjectNode getContextualEntity(
       @PathVariable String crateId, @PathVariable String contextualId,
@@ -71,7 +81,7 @@ public class ContextualEntityController {
     return entity.getProperties();
   }
 
-  @PutMapping("/{property}")
+  @PutMapping("/{contextualId}/{property}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void addPropertyToContextualEntity(
       @PathVariable String crateId, @PathVariable String contextualId, @PathVariable String property,
@@ -87,7 +97,7 @@ public class ContextualEntityController {
 
   }
 
-  @DeleteMapping("/{property}")
+  @DeleteMapping("/{contextualId}/{property}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void deletePropertyFromContextualEntity(
       @PathVariable String crateId, @PathVariable String contextualId, @PathVariable String property,
