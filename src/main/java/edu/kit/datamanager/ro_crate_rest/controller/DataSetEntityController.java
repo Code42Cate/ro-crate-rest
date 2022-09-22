@@ -64,8 +64,6 @@ public class DataSetEntityController {
       @RequestAttribute RoCrate crate,
       HttpServletResponse res) {
 
-    System.out.println(URLDecoder.decode(dataSetId, StandardCharsets.UTF_8));
-
     DataEntity entity = crate.getDataEntityById(URLDecoder.decode(dataSetId, StandardCharsets.UTF_8));
     if (entity == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find resource");
