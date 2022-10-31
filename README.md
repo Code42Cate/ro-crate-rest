@@ -13,14 +13,4 @@ For documentation, run the server and visit [swagger-ui](http://localhost:8080/s
 
 ### DIY
 
-```bash
-./gradlew build
-./gradlew bootRun
-```
-
-### Docker
-
-crates/{crateId}/entities/ro-crate-metadata.json
-  put
-  put /parameter
-  get
+TODO
