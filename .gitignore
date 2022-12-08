@@ -39,3 +39,5 @@ out/
 gradle/wrapper/**/*
 
 rocrate-storage
+
+temp/**/*
