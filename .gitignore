@@ -36,8 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-gradle/wrapper/**/*
-
 rocrate-storage
 
 temp/**/*
