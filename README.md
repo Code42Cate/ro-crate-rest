@@ -1,3 +1,4 @@
+[![Build & Tests](https://github.com/Code42Cate/ro-crate-rest/actions/workflows/ci.yml/badge.svg)](https://github.com/Code42Cate/ro-crate-rest/actions/workflows/ci.yml)
 # ro-crate-rest
 A RESTful API that aims to mirror the functionality provided by the java library [ro-crate-java](https://github.com/kit-data-manager/ro-crate-java/)
 
